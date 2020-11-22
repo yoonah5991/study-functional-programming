@@ -20,11 +20,11 @@ fun main() {
     val topBox = object : Box<Top> {}
     val bottomBox = object : Box<Bottom> {}
 
-    covariant(topBox)
+//    covariant(topBox)
     covariant(bottomBox)
 
     inCovariant(topBox)
-    inCovariant(bottomBox)
+//    inCovariant(bottomBox)
 }
 
 /*인터페이스에서의 예*/
@@ -34,11 +34,11 @@ interface Source2<in T> {}
 //함수 파라미터 말고 함수안의 지역변수를 포커스로 둬서 봐야함
 fun setSource(source: Source<Middle>) {
     val newSource1: Source<Top> = source  //OK - newSource1의 하위타입이 Source<Middle>이므로 가능
-    val newSource2: Source<Bottom> = source
+//    val newSource2: Source<Bottom> = source
 }
 
 fun setSource2(source2: Source2<Middle>) {
-    val newSource1: Source2<Top> = source2
+//    val newSource1: Source2<Top> = source2
     val newSource2: Source2<Bottom> = source2  //OK - newSource2의 상위 타입이 Source<Middle>이므로 가능
 }
 
@@ -53,11 +53,11 @@ interface AdvancedSource2<in T> {
 
 fun setAdvancedSource(source: AdvancedSource<Middle>) {
     val value: Top = source.get()
-    val value2: Bottom = source.get()
+//    val value2: Bottom = source.get()
 }
 
 fun setAdvancedSource2(source2: AdvancedSource2<Middle>) {
-    source2.set(Top())
+//    source2.set(Top())
     source2.set(Bottom())
 }
 
@@ -68,14 +68,27 @@ val AdvancedSourceImpl = object : AdvancedSource<Middle> {
     }
 }
 
-val AdvancedSource2Impl = object : AdvancedSource2<Middle> {
-    override fun set(value: Bottom) {
-        //이건 안됨
-    }
-}
+//val AdvancedSource2Impl = object : AdvancedSource2<Middle> {
+//    override fun set(value: Bottom) {
+//        //이건 안됨
+//    }
+//}
 
-val AdvancedSource3Impl2 = object : AdvancedSource2<Middle> {
-    override fun set(value: Top) {
-        //이건 안됨
+//val AdvancedSource3Impl2 = object : AdvancedSource2<Middle> {
+//    override fun set(value: Top) {
+//        //이건 안됨
+//    }
+//}
+
+sealed class Result<out R>
+data class Success<out T>(val data: T) : Result<T>()
+
+class Test<out T>(val data: T) {
+    //생성자에서는 상관이 없고
+    fun get(): T {
+        return data
     }
+//    fun set(value:T){
+//        //함수에서는 안됨!
+//    }
 }
